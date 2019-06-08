@@ -1,0 +1,15 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+{% block content %}
+      <legend> Student Page </legend>    
+        {% for x in data  %}
+            {% if user.username == x %}
+            <h1> {{ user.username}} </h1>
+             <p>  you are a student </p>
+             
+
+            {% endif %}
+             
+        {% endfor %}
+        
+{% endblock content %}
