@@ -1,0 +1,71 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+ 
+{% block content %}
+ 
+
+
+<form method="POST" id="subjectForm" data-courses-url = "{% url 'ajax_load_courses'%}">
+{% csrf_token %}
+<legend class="border-bottom mb-4">
+                   Add Subjects
+</legend>
+{{ form|crispy}}
+<div class="form-group">
+            <button class="btn btn-default" type="submit">Add</button>
+        </div>
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_department_name").change(function () {
+      var url = $("#subjectForm").attr("data-courses-url");   
+      var dept_Id = $(this).val();  
+
+      $.ajax({                       
+        url: url,                    
+        data: {
+          'department': dept_Id       
+        },
+        success: function (data) { 
+          $("#id_course_name").css("color","Black");
+          $("#id_course_name").html(data);
+        
+        }
+      });
+         });
+     $("#id_course_name").change(function () {
+      var url1 =  "http://127.0.0.1:8000/ajax/load-teachers/";   
+      var c_Id = $(this).val();  
+        
+       $.ajax({
+          url: url1,
+          data:{
+              'course': c_Id
+          },
+        success: function (data) { 
+           $("#id_teacher_name").css("color","Black");
+          $("#id_teacher_name").html(data); 
+        
+        },
+        error: function(){
+            alert("error");
+        }
+          
+
+
+
+       });
+       
+      });
+   
+
+  </script>
+
+
+
+
+
+ 
+{% endblock content %}

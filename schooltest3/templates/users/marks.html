@@ -1,0 +1,26 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+ 
+{% block content %}
+   <div class = "container">
+   
+    <form method="POST">
+    {% csrf_token %}
+<legend class="border-bottom mb-4">
+                   Give Marks to Students
+</legend>
+{{ Marks|crispy}}
+<div class="form-group">
+            <button class="btn btn-default" type="submit">Submit</button>
+        </div>
+</form>
+   <div>
+
+
+
+
+ 
+
+
+
+{% endblock content %}

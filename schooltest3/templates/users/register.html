@@ -2,6 +2,10 @@
 {% load crispy_forms_tags%}
 {% block content %}
         <div class = "container">
+        <small class="text-muted">
+           If you already have account <a class="ml-2" href="{% url 'login' %}"> Click here to Login in! </a>
+           </small>
+
         <form method="POST">
         {% csrf_token %}
         <fieldset class = "form-group">
@@ -9,9 +13,10 @@
                    Registration Page
           </legend>
               {{ form|crispy }}
+              {{ profile_form|crispy }}
         </fieldset>
         <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Register</button>
+            <button class="btn btn-default" type="submit">Register</button>
         </div>
         </form>
         </div>

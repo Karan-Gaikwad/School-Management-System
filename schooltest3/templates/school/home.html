@@ -1,0 +1,159 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+ 
+{% block content %}
+
+   
+   <h4 class="alert-info"> Welcome to School Management System </h4>
+   <hr>
+    
+    
+   {% if user.is_authenticated and user.userprofile.statustype == 'Teacher' %}
+    <div class="container" id="d1">
+    <button id="btn-dept" class="btn btn-default"> See Departments </button>
+    <table class="table table-hover" >
+    <thead>
+      <tr><th>Departments</th></tr>
+    </thead>
+    <tbody id="table1">
+       
+       
+    
+    </tbody>
+   </table>
+   <a id="btn-adddept"   href="{% url 'department_add' %}"class="btn btn-default"> Add Department </a>
+   <hr>
+  <a id="btn-attendance" href="{% url 'attendance' %}" class="btn btn-default"> Mark Attendance </a>
+  <hr>
+  <a id="btn-exam" href="{% url 'exam' %}" class="btn btn-default"> Add Exam </a>
+  <hr>
+  <a id="btn-exam" href="{% url 'marks' %}" class="btn btn-default"> Add Marks </a>
+  <hr>
+  <a id="btn-seemarksteacher" href="{% url 'seemarks_teacher' %}" class="btn btn-default"> See Marks </a>
+
+   </div>
+  
+   {% endif %}
+
+   {% if user.is_authenticated and user.userprofile.statustype == 'Student' %}
+   <div class="container">
+   <button id="btn-seemarks" onclick="disableButton()" style="margin:15px;"  class="btn btn-primary"> See Marks</button>
+    
+   <button id="btn-seeatt" style="margin:15px;"  class="btn btn-primary"> See Attendance </button> 
+    
+    <button id="btn-seeexam" style="margin: 15px;"  class="btn btn-primary"> See Exam </button>
+    
+   </div>
+   <div id="show">
+   <div>
+   </div>
+   <div id="show2">
+   <div>
+   </div>
+   <div id="show3">
+   <div>
+
+  <script type="text/javascript">
+   var seemarks = document.getElementById("btn-seemarks");
+   seemarks.addEventListener("click", function(){
+       var ourRequest = new XMLHttpRequest();
+       ourRequest.open("GET",urlmarks);
+       ourRequest.onload = function(){
+           
+          var ourData = JSON.parse(ourRequest.responseText);
+           
+          showmarks(ourData);
+          
+           
+       }
+       ourRequest.send();
+       
+   })
+   function showmarks(data){
+       var show = document.getElementById("show");
+       var details ="";
+       for(i = 0; i<data.length;i++)
+       {
+         details += "<h3> Your Marks are </h3>" + data[i].marks;
+       }
+       //show.insertAdjacentHTML("beforeend", details);
+        
+   }
+   function disableButton(){
+		seemarks.disabled = true;
+		 
+	  }
+  
+  
+  </script>
+   
+   
+
+       
+  
+   {% endif %}
+     
+
+
+   {% if user.is_authenticated and user.userprofile.statustype == 'Parent' %}
+   
+   <div class="container">
+   <button id="btn-seemarks"  style="margin:15px;"  class="btn btn-primary"> See Marks</button>
+    
+   <button id="btn-seeatt" style="margin:15px;"  class="btn btn-primary"> See Attendance </button> 
+    
+     
+    
+   </div>
+   
+
+
+   {% endif %}
+
+
+
+     
+   <script type="text/javascript">
+     var btn = document.getElementById("btn-dept");
+
+     var url1 = "http://localhost:8000/api/Departmentapi";
+     var urlmarks =  "http://127.0.0.1:8000/api/Marksapi/";
+     var urlattendance = "http://127.0.0.1:8000/api/Attendanceapi/";
+     var urlexam =  "http://127.0.0.1:8000/api/Examsapi/";
+   btn.addEventListener("click", function(){
+       var ourRequest = new XMLHttpRequest();
+       ourRequest.open("GET",url1);
+       ourRequest.onload = function(){
+           
+          var ourData = JSON.parse(ourRequest.responseText);
+          
+          showdepartments(ourData);
+          disableButton();
+       }
+       ourRequest.send();
+       
+   })
+   function disableButton(btn){
+		document.getElementById("btn-dept").disabled = true;
+		 
+	}
+   function showdepartments(data){
+             var table = document.getElementById("table1");
+             var tabledata = "";
+
+             for(i = 0;i<data.length;i++)
+             {
+               tabledata += "<tr><td><a style='text-decoration:none' href='http://127.0.0.1:8000/school/"+data[i].id+"/"+data[i].department_name +"'>"+data[i].department_name+"</a></td></tr>";
+               
+             }
+             table.insertAdjacentHTML("beforeend", tabledata);
+   }
+   </script>      
+              
+             
+
+            
+             
+         
+        
+{% endblock content %}

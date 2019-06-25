@@ -1,0 +1,68 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+ 
+{% block content %}
+ 
+
+<div class="container">
+<legend class="border-bottom mb-4" id="d1">
+              {{deptname}}      
+</legend>
+<button id="btn-courses" class="btn btn-default"> See Courses </button>
+<table class="table table-hover" >
+    <thead>
+      <tr><th>Courses</th></tr>
+    </thead>
+    <tbody id="table1">
+       
+       
+    
+    </tbody>
+   </table>
+   <a id="btn-adddept"   href="{% url 'course_add' %}"class="btn btn-default"> Add Courses </a>
+              
+
+</div>
+<script type="text/javascript">
+     var btn = document.getElementById("btn-courses");
+     var url = "http://localhost:8000/api/Courseapi";
+
+   btn.addEventListener("click", function(){
+       var ourRequest = new XMLHttpRequest();
+       ourRequest.open("GET",url);
+       ourRequest.onload = function(){
+           
+          var ourData = JSON.parse(ourRequest.responseText);
+          console.log(ourData);
+          showCourses(ourData);
+          disableButton();
+       }
+       ourRequest.send();
+       
+   })
+   function disableButton(btn){
+		document.getElementById("btn-courses").disabled = true;
+		 
+	}
+   function showCourses(data){
+             var table = document.getElementById("table1");
+             var tabledata = "";
+
+             for(i = 0;i<data.length;i++)
+             {
+               if(data[i].department_name == {{pk}})
+               {
+               tabledata += "<tr><td><a style='text-decoration:none' href='http://127.0.0.1:8000/school/"+data[i].department_name+"/"+data[i].id+"/"+data[i].course_name +"'>"+data[i].course_name+"</a></td></tr>";
+               }
+                
+             }
+             if(tabledata == "")
+             {
+                 tabledata += "<h2>Currently no Courses added in this Department!</h2>";
+             }
+             table.insertAdjacentHTML("beforeend", tabledata);
+   }
+
+   </script>      
+   
+{% endblock content %}

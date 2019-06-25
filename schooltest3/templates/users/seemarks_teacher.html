@@ -1,0 +1,214 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+ 
+{% block content %}
+   <div class = "container" id ="id_container">
+    <legend class="border-bottom mb-4">
+                   See Marks
+    </legend>
+    <div id="id_form">
+     
+    
+         {{ form|crispy}}
+    <div class="form-group">
+            <button id="btn-show" class="btn btn-default">Show</button>
+        </div>
+        <div class="form-group">
+            <button id="btn-condition" class="btn btn-default">Show Marks with Conditions</button>
+        </div>    
+         <div class="extra" id="disable">
+               
+              Enter the Marks Greater than <input type="text" id="gte" value="enter"> <h3> OR </h3>
+              Enter the Marks Less than <input type="text" id="lte" value="enter">
+         </div>
+
+
+    </div>
+    <style>
+        #disable {display:none};
+         
+
+    </style>
+   <div class ="container" id="disable">
+      <table class="table table-hover" >
+    <thead>
+      <tr><th>Marks</th></tr>
+    </thead>
+    <tbody id="table1">
+       <tr>
+           <td>Name</td>
+           <td>Course Name</td>
+           <td>Subject Name</td>
+           <td>Marks</td>
+       </tr>
+        
+    
+    </tbody>
+   </table>
+
+   </div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+
+
+
+
+
+    $("#id_department_name").change(function () {
+      var url = "http://127.0.0.1:8000/ajax/load-courses/";   
+      var dept_Id = $(this).val();  
+
+      $.ajax({                       
+        url: url,                    
+        data: {
+          'department': dept_Id       
+        },
+        success: function (data) { 
+          $("#id_course_name").css("color","Black");
+          $("#id_course_name").html(data);
+        
+        }
+      });
+         });
+     $("#id_year").change(function () {
+      var url1 =  "http://127.0.0.1:8000/ajax/load-subjects/";   
+      var c_Id = $("#id_course_name").val();  
+      var year = $(this).val();
+       
+       $.ajax({
+          url: url1,
+          data:{
+              'course': c_Id,
+              'year': year
+          },
+        success: function (data) { 
+           $("#id_subject_name").css("color","Black");
+          $("#id_subject_name").html(data); 
+        
+        },
+        error: function(){
+            alert("error");
+        }
+      }); });
+
+       $("#id_year").change(function () {
+      var url1 =  "http://127.0.0.1:8000/ajax/load-students/";   
+      var c_Id = $("#id_course_name").val();  
+      var year = $(this).val(); 
+       $.ajax({
+          url: url1,
+          data:{
+              'course': c_Id,
+               'year' : year
+          },
+        success: function (data) { 
+           $("#id_student_name").css("color","Black");
+          $("#id_student_name").html(data); 
+        
+        },
+        error: function(){
+            alert("error");
+        }
+      }); });
+
+      $("#id_subject_name").change(function () {
+      var url1 =  "http://127.0.0.1:8000/ajax/load-exams/";   
+      var sub = $(this).val();  
+        
+       $.ajax({
+          url: url1,
+          data:{
+              'subject': sub,
+               
+          },
+        success: function (data) { 
+           $("#id_exam_name").css("color","Black");
+          $("#id_exam_name").html(data); 
+        
+        },
+        error: function(){
+            alert("error");
+        }
+      }); });
+     $("#btn-show").on("click",function () {
+      exam= $("#id_exam_name").val();
+      student= $("#id_student_name").val();
+      sname=$("#id_student_name option:selected").text();
+      cname=$("#id_course_name option:selected").text();
+      subname=$("#id_subject_name option:selected").text();
+
+      marksgte=$("#gte").val();
+      markslte=$("#lte").val();
+      if(marksgte == "enter" && markslte == "enter" )
+      {
+      url = "http://127.0.0.1:8000/api/Marksapi/?exam_name="+exam+"&student_name="+student;
+       $("#id_form").css("display","none");
+       $("div").last().removeAttr("id");
+         
+
+        $.ajax({
+          type :'GET',
+          url: url,
+          success: function (data) { 
+               for(i=0;i<data.length;i++)
+               {
+                  
+                 $("#table1").html("<tr><td>"+sname+"</td><td>"+cname+"</td><td>"+subname+"</td><td>"+data[i].marks+"</td></tr>");
+               }
+        },
+        error: function(){
+            alert("error");
+        }
+      });
+      }
+      else{
+          url = "http://127.0.0.1:8000/api/Marksapi/?marks__gte="+marksgte+"&marks__lte="+markslte+"&student_name="+student+"&exam_name="+exam;
+          $("#id_form").css("display","none");
+          $("div").last().removeAttr("id");  
+          dataset="";
+          $.ajax({
+          type :'GET',
+          url: url,
+          success: function (data) { 
+               
+              console.log(data);
+               for(i=0;i<data.length;i++)
+               {
+                  
+                dataset +=   "<tr><td>"+sname+"</td><td>"+cname+"</td><td>"+subname+"</td><td>"+data[i].marks+"</td></tr>";
+               }
+               $("#table1").html(dataset);
+        },
+        error: function(){
+            alert("error");
+        } 
+        });   
+
+           
+      }
+     });
+
+      $("#btn-condition").on("click",function () {
+       
+      $(".extra").last().removeAttr("id");
+      
+      
+      
+      });
+     
+
+
+   
+
+  </script>
+
+
+
+
+
+
+
+
+{% endblock content %}

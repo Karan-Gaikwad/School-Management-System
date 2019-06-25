@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-{% load static %}
+{% load staticfiles %}
 <html lang="en">
 <head>
-<link rel="stylesheet" type="text/css" href="F:\project tests\test3\schooltest3\static\school\min.css">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href= "{% static 'school/css.css' %}">
+ 
   {% if title%}
     
   <title>School - {{title}}</title>
@@ -12,6 +14,7 @@
   {% endif %}
 </head>
 <body>
+
  <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -23,7 +26,7 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
     {% if user.is_authenticated %} 
-      <li><a href="{% url 'student'%}">Profile</a></li>
+      <li><a href="{% url 'profile'%}">Profile</a></li>
       <li><a href="{% url 'logout'%}"><span class="glyphicon glyphicon-off"></span> Logout</a></li>
     {% else %}
       <li><a href="{% url 'register'%}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
@@ -32,7 +35,7 @@
     </ul>
   </div>
 </nav> 
- 
+  
   <main role="main" class="container">
   <div class="row">
     <div class="col-md-8">
@@ -44,7 +47,7 @@
          {% endfor %}
        
       {% endif %}
-       
+       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
       {% block content %}{% endblock %}
     </div>
        

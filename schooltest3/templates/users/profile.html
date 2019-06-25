@@ -1,0 +1,52 @@
+{% extends "school/base.html" %}
+{% load crispy_forms_tags%}
+{% load staticfiles %}
+{% block content %}
+          
+              
+
+            {% if user.userprofile.statustype == 'Student' %}
+            <legend> Student Page </legend>
+            <div class="container">
+             <h3 id="h3"> Hello, {{ user.username}} </h3>
+                       
+             
+             {% for i in student  %}
+             {% if i.username.user.username == user.username %}
+               <div class="profile-usertitle-job">
+               <p> Name :  {{ i.student_name }} </p>
+               <p> Enrolled Course :  {{ i.course_name }} </p>
+               <p> Department Name :  {{ i.department_name }} </p>
+               <p> Email : {{ user.email }} </p>
+               </div>  
+              {% endif %}       
+                   
+                        
+             {% endfor %}
+             
+            {% endif %}
+
+            {% if user.userprofile.statustype == 'Teacher' %}
+            <legend> Teacher Page </legend>
+            <div  class="container">
+            <h3 id="h3"> Hello, {{ user.username}} </h3>
+            <p>First Name :{{ user.first_name}} </p>
+            <p>Last Name : {{ user.lastame }} </p>
+            <p>Email : {{ user.email }} </p>
+            <div>
+            {% endif %} 
+            
+            
+            {% if user.userprofile.statustype == 'Parent' %}
+            <legend> Parent Page </legend>
+            <h3 id="h3"> Hello, {{ user.username}} </h3>
+            <p>First Name :{{ user.first_name}} </p>
+            <p>Last Name : {{ user.lastame }} </p>
+            <p>Email : {{ user.email }} </p>
+            {% endif %} 
+         
+
+ 
+         
+        
+{% endblock content %}
